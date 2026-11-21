@@ -1,0 +1,5 @@
+tunes/*.mp3
+tunes/*.wav
+tunes/*.m4a
+tunes/*.ogg
+.DS_Store
