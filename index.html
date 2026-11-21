@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>Cassette Media Player — Appogenesis</title>
+<meta content="#000000" name="theme-color"/>
+
+
+
+
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:var(--page-bg,#000);color:#fff;min-height:100%;font-family:monospace;transition:background-color .45s ease}
+body{min-height:100svh;display:flex;align-items:center;justify-content:center}
+main{width:min(100%,820px);padding:20px 12px 26px;text-align:center}
+.logo{display:block;width:min(83%,590px);height:auto;margin:0 auto}.logo.top{margin-bottom:-3px}.logo.bottom{margin-top:0}
+.art{width:76%;max-width:460px;display:block;height:auto;margin:auto}.tape-label{fill:#fff;font:14px monospace;letter-spacing:.55px;text-anchor:middle}
+.case{fill:none;stroke:white;stroke-width:2.25;stroke-linecap:round;stroke-linejoin:round}
+.fine{fill:none;stroke:white;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round}
+.tape{fill:none;stroke:white;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+.wheel{transform-box:fill-box;transform-origin:center}.playing .wheel{animation:spin 2.2s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.scrubbing-forward .wheel,.scrubbing-reverse .wheel{animation:spin .33s linear infinite !important}.scrubbing-reverse .wheel{animation-direction:reverse !important}
+#rewind,#forward{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.controls{display:flex;justify-content:center;align-items:center;gap:clamp(9px,3.2vw,27px);margin-top:-12px}
+button{display:grid;place-items:center;background:transparent;border:0;color:white;padding:10px;cursor:pointer}button svg{width:25px;height:25px}button:hover{opacity:.6}button:focus-visible{outline:1px solid white;outline-offset:2px}
+#status{color:#999;font:11px/1.5 monospace;min-height:18px;margin:7px auto;max-width:95%}
+@media(max-width:420px){main{padding:13px 5px 18px}.controls{gap:6px}button{padding:8px}button svg{width:23px;height:23px}.logo{width:90%}}
+</style></head><body><main aria-label="Cassette Media Player" id="player">
+
+<svg aria-label="Cassette tape mechanism, with winding reels" class="art" role="img" viewbox="0 0 660 505">
+<defs><clippath id="label-clip"><rect height="30" width="428" x="116" y="126"></rect></clippath><mask height="505" id="left-tape-ring" maskunits="userSpaceOnUse" width="660" x="0" y="0"><rect fill="white" height="505" width="660" x="0" y="0"></rect><circle cx="213" cy="254" fill="black" r="62"></circle></mask><mask height="505" id="right-tape-ring" maskunits="userSpaceOnUse" width="660" x="0" y="0"><rect fill="white" height="505" width="660" x="0" y="0"></rect><circle cx="443" cy="254" fill="black" r="62"></circle></mask></defs>
+<text class="tape-label" clip-path="url(#label-clip)" id="tape-filename" x="330" y="148">LOAD A RECORDING</text>
+<g class="case">
+<path d="M54 82H606Q623 82 623 101V327L630 337V380L623 390V427Q623 444 606 444H54Q37 444 37 427V390L30 380V337L37 327V101Q37 82 54 82Z"></path>
+<path d="M49 101L61 120H104Q117 120 117 108V94H543V108Q543 120 556 120H599L611 101"></path>
+<path d="M46 94H61L75 109H103V85M614 94H599L585 109H557V85"></path>
+<path d="M122 441L141 365Q143 355 154 355H506Q517 355 519 365L538 441"></path>
+<path d="M135 436L152 368Q154 363 161 363H499Q506 363 508 368L525 436"></path>
+<path d="M150 384H510M167 386L181 398H479L493 386"></path>
+<path d="M211 439V397H449V439M227 399V421M433 399V421"></path>
+<path d="M264 423v-22h132v22M272 424H388"></path>
+<circle cx="330" cy="378" r="12"></circle><circle cx="330" cy="378" r="5"></circle>
+<circle cx="76" cy="375" r="19"></circle><circle cx="76" cy="375" r="9"></circle>
+<circle cx="584" cy="375" r="19"></circle><circle cx="584" cy="375" r="9"></circle>
+<circle cx="119" cy="409" r="23"></circle><circle cx="119" cy="409" r="6"></circle>
+<circle cx="541" cy="409" r="23"></circle><circle cx="541" cy="409" r="6"></circle>
+<circle cx="198" cy="428" r="12"></circle><circle cx="462" cy="428" r="12"></circle>
+<circle cx="54" cy="101" r="10"></circle><circle cx="606" cy="101" r="10"></circle>
+<circle cx="54" cy="426" r="10"></circle><circle cx="606" cy="426" r="10"></circle>
+</g>
+<g class="fine">
+<path d="M43 108L62 127H107Q124 127 124 110V90H536V110Q536 127 553 127H598L617 108"></path>
+<path d="M44 348V122M616 348V122"></path>
+<path d="M119 395V423M105 409H133M110 400L128 418M128 400L110 418"></path>
+<path d="M541 395V423M527 409H555M532 400L550 418M550 400L532 418"></path>
+<circle cx="119" cy="409" r="16"></circle><circle cx="541" cy="409" r="16"></circle>
+<circle cx="54" cy="101" r="4"></circle><circle cx="606" cy="101" r="4"></circle>
+<circle cx="54" cy="426" r="4"></circle><circle cx="606" cy="426" r="4"></circle>
+<path d="M239 254H341M239 327H341"></path>
+</g>
+<circle cx="213" cy="254" fill="#fff" id="reel-left" mask="url(#left-tape-ring)" r="62"></circle>
+<circle cx="443" cy="254" fill="#fff" id="reel-right" mask="url(#right-tape-ring)" r="121"></circle>
+<g class="case"><path d="M295 224H326M295 283H326"></path><path d="M302 239h6v30h-6zM315 239h6v30h-6z"></path></g>
+<g transform="translate(213 254)">
+<g class="case"><circle r="62"></circle><circle r="54"></circle><circle r="46"></circle></g>
+<g class="fine"><circle r="39"></circle><circle r="33"></circle><circle cx="0" cy="-52" r="4"></circle><circle cx="51" cy="3" r="4"></circle><circle cx="-48" cy="19" r="4"></circle></g>
+<g class="wheel"><circle class="case" r="28"></circle><circle class="fine" r="19"></circle><g class="case"><path d="M-5-31V-22H5V-31Z"></path><path d="M-5-31V-22H5V-31Z" transform="rotate(60)"></path><path d="M-5-31V-22H5V-31Z" transform="rotate(120)"></path><path d="M-5-31V-22H5V-31Z" transform="rotate(180)"></path><path d="M-5-31V-22H5V-31Z" transform="rotate(240)"></path><path d="M-5-31V-22H5V-31Z" transform="rotate(300)"></path></g></g>
+</g>
+<g transform="translate(443 254)">
+<g class="case"><circle r="62"></circle><circle r="54"></circle><circle r="46"></circle></g>
+<g class="fine"><circle r="39"></circle><circle r="33"></circle><circle cx="0" cy="-52" r="4"></circle><circle cx="51" cy="3" r="4"></circle><circle cx="-48" cy="19" r="4"></circle></g>
+<g class="wheel"><circle class="case" r="28"></circle><circle class="fine" r="19"></circle><g class="case"><path d="M-5-31V-22H5V-31Z"></path><path d="M-5-31V-22H5V-31Z" transform="rotate(60)"></path><path d="M-5-31V-22H5V-31Z" transform="rotate(120)"></path><path d="M-5-31V-22H5V-31Z" transform="rotate(180)"></path><path d="M-5-31V-22H5V-31Z" transform="rotate(240)"></path><path d="M-5-31V-22H5V-31Z" transform="rotate(300)"></path></g></g>
+</g>
+<path class="tape" d="M140.86 215.02 L59.28 365.97 Q50 379 66 391 L107 423 Q119 432 130 423 L148 420 H512 L530 423 Q541 432 553 423 L594 391 Q609 379 601.47 367.52 L535.85 214.25" id="tape-thread"></path>
+</svg>
+<div class="controls">
+<button aria-label="Previous tape" id="previous" title="Previous tape"><svg viewbox="0 0 24 24"><path d="M3 5h2v14H3zM19 5v14L7 12z" fill="currentColor"></path></svg></button>
+<button aria-label="Rewind (hold to scan backward)" id="rewind" title="Rewind — hold to scan backward"><svg viewbox="0 0 24 24"><path d="M12 5v14L2 12zM22 5v14L12 12z" fill="currentColor"></path></svg></button>
+<button aria-label="Play" aria-pressed="false" id="play" title="Play"><svg viewbox="0 0 24 24"><path d="M7 3 21 12 7 21z" fill="currentColor" id="play-icon"></path></svg></button>
+<button aria-label="Stop" id="stop" title="Stop"><svg viewbox="0 0 24 24"><path d="M5 5h14v14H5z" fill="currentColor"></path></svg></button>
+<button aria-label="Fast forward (hold to scan forward)" id="forward" title="Fast forward — hold to scan forward"><svg viewbox="0 0 24 24"><path d="M2 5v14l10-7zM12 5v14l10-7z" fill="currentColor"></path></svg></button>
+<button aria-label="Next tape" id="next" title="Next tape"><svg viewbox="0 0 24 24"><path d="M19 5h2v14h-2zM5 5v14l12-7z" fill="currentColor"></path></svg></button>
+</div><div aria-live="polite" id="status" role="status"></div>
+
+<audio id="audio" preload="metadata"></audio>
+</main><script>// Folder discovery uses tunes/scan.asp; the MP3 files remain in tunes/.
+(()=>{
+ const root=document.getElementById('player'), audio=document.getElementById('audio');
+ const label=document.getElementById('tape-filename'), status=document.getElementById('status');
+ const left=document.getElementById('reel-left'),right=document.getElementById('reel-right');
+ const tape=document.getElementById('tape-thread');
+ const backgrounds=['#146BEA','#E54C1C','#D9F20F','#8DCB55','#EF57B9','#F41D41','#4B6620','#9A5D69','#224BAB','#000000'];
+ const MIN=62, MAX=121, SUM=MIN+MAX, ATTACH_INSET=2.5;
+ let tracks=[], index=0, lastBackground=-1, scrubbing=null, lastSaved=0;
+
+ // Artwork and transport information for Android lock screen / notification controls.
+ const mediaSession=('mediaSession' in navigator)?navigator.mediaSession:null;
+ function updateMediaMetadata(){
+   if(!mediaSession || !tracks[index])return;
+   try{
+     mediaSession.metadata=new MediaMetadata({
+       title:tracks[index].replace(/\.[^.]+$/,''),
+       artist:'Cassette Media Player',album:'Cassette Media Player'
+     });
+   }catch(e){}
+ }
+ function updateMediaPosition(){
+   if(!mediaSession || typeof mediaSession.setPositionState!=='function')return;
+   const duration=audio.duration;
+   if(!Number.isFinite(duration)||duration<=0)return;
+   try{mediaSession.setPositionState({
+     duration, playbackRate:audio.playbackRate,
+     position:Math.max(0,Math.min(audio.currentTime||0,duration))
+   });}catch(e){}
+ }
+ function registerMediaAction(action,handler){
+   if(!mediaSession)return;
+   try{mediaSession.setActionHandler(action,handler)}catch(e){}
+ }
+
+ const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+ const storageKey=name=>'cassette-media-player:position:'+name;
+ function remember(){
+   if(!tracks[index] || !Number.isFinite(audio.currentTime))return;
+   try{localStorage.setItem(storageKey(tracks[index]),String(audio.currentTime));}catch(e){}
+ }
+ function savedTime(name){try{return Math.max(0,Number(localStorage.getItem(storageKey(name)))||0)}catch(e){return 0}}
+ function shorten(name){return name.length>35?name.slice(0,32)+'…':name}
+ function randomBackground(){
+   let n=Math.floor(Math.random()*(backgrounds.length-(lastBackground===-1?0:1)));
+   if(lastBackground!==-1 && n>=lastBackground)n++;
+   lastBackground=n;
+   document.documentElement.style.setProperty('--page-bg',backgrounds[n]);
+ }
+ // External common tangents between winding reel and outer guide roller:
+ // Attach the tape 2.5 SVG units inside the visible outer winding radius.
+ function tangent(cx,cy,r,gx,gy,gr,preferredX){
+   const dx=gx-cx,dy=gy-cy,len=Math.hypot(dx,dy),q=(r-gr)/len;
+   const k=Math.sqrt(Math.max(0,1-q*q));
+   const ux=dx/len,uy=dy/len;
+   const options=[[ux*q-uy*k,uy*q+ux*k],[ux*q+uy*k,uy*q-ux*k]];
+   const n=options.reduce((a,b)=>Math.abs(a[0]-preferredX)<Math.abs(b[0]-preferredX)?a:b);
+   return {a:[cx+r*n[0],cy+r*n[1]],b:[gx+gr*n[0],gy+gr*n[1]]};
+ }
+ function setReels(frac){
+   // Deliberately conserve the sum of the two outer radii (as requested).
+   const p=clamp(frac,0,1),rl=MIN+(MAX-MIN)*p,rr=SUM-rl;
+   left.setAttribute('r',rl.toFixed(2));right.setAttribute('r',rr.toFixed(2));
+   const l=tangent(213,254,rl-ATTACH_INSET,76,375,19,-1),r=tangent(443,254,rr-ATTACH_INSET,584,375,19,1);
+   const fmt=v=>v.map(x=>x.toFixed(2)).join(' ');
+   tape.setAttribute('d',`M${fmt(l.a)} L${fmt(l.b)} Q50 379 66 391 L107 423 Q119 432 130 423 L148 420 H512 L530 423 Q541 432 553 423 L594 391 Q609 379 ${fmt(r.b)} L${fmt(r.a)}`);
+ }
+ function updateReels(){
+   const duration=audio.duration;
+   setReels(Number.isFinite(duration)&&duration>0?audio.currentTime/duration:0);
+ }
+ async function fetchTracks(){
+   const response=await fetch('tunes/scan.asp?scan=1',{cache:'no-store'});
+   if(!response.ok)throw new Error('Folder scan unavailable');
+   const files=await response.json();
+   if(!Array.isArray(files)||files.length>1000||!files.every(x=>typeof x==='string'))throw Error('Invalid folder listing');
+   return files.filter(x=>/\.(mp3|wav|m4a|ogg)$/i.test(x)&&!/[\\/]/.test(x)).sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:'base'}));
+ }
+ function setTape(i,shouldPlay=false,changeColour=true){
+   if(!tracks.length){audio.pause();audio.removeAttribute('src');audio.load();label.textContent='NO RECORDINGS';status.textContent='NO AUDIO FILES IN tunes/';setReels(0);return}
+   stopScrub();remember();
+   index=(i+tracks.length)%tracks.length;
+   const name=tracks[index],restore=savedTime(name);
+   audio.pause();root.classList.remove('playing');
+   audio.src='tunes/'+encodeURIComponent(name);audio.load();
+   label.textContent=shorten(name);status.textContent='';
+   updateMediaMetadata();
+   setReels(0);
+   if(changeColour)randomBackground();
+   const expected=audio.currentSrc||audio.src;
+   const restoreOnLoad=()=>{
+     if((audio.currentSrc||audio.src)!==expected)return;
+     const limit=Number.isFinite(audio.duration)?Math.max(0,audio.duration-0.25):restore;
+     if(restore>0){try{audio.currentTime=Math.min(restore,limit)}catch(e){}}
+     updateReels();
+   };
+   audio.addEventListener('loadedmetadata',restoreOnLoad,{once:true});
+   // Start play within the button gesture where possible (Safari/iOS).
+   if(shouldPlay)audio.play().catch(()=>status.textContent='TAP PLAY TO CONTINUE');
+ }
+ async function switchTape(direction,override=null){
+   const playing=override===null?(!audio.paused&&!audio.ended):override;
+   const name=tracks[index];remember();
+   try{
+     const incoming=await fetchTracks();
+     if(incoming.length){tracks=incoming;const old=tracks.indexOf(name);index=old===-1?0:old;}
+   }catch(e){if(!tracks.length){status.textContent='CHECK tunes/scan.asp';return;}}
+   if(tracks.length)setTape(index+direction,playing,true);
+ }
+ function jump(seconds){
+   if(!Number.isFinite(audio.duration))return;
+   audio.currentTime=clamp(audio.currentTime+seconds,0,audio.duration);
+   updateReels();remember();
+ }
+ function stopScrub(){
+   if(!scrubbing)return;
+   clearInterval(scrubbing.interval);
+   const {button,pointerId,wasMuted}=scrubbing;
+   scrubbing=null;
+   audio.muted=wasMuted;
+   root.classList.remove('scrubbing-forward','scrubbing-reverse');
+   if(button.hasPointerCapture&&button.hasPointerCapture(pointerId))button.releasePointerCapture(pointerId);
+   remember();
+ }
+ function startScrub(button,dir,event){
+   if(scrubbing||(event.button!==undefined&&event.button!==0))return;
+   event.preventDefault();
+   const pointerId=event.pointerId,now=performance.now();
+   const wasMuted=audio.muted;
+   audio.muted=true; // Silent while fast-forwarding or rewinding.
+   if(button.setPointerCapture)button.setPointerCapture(pointerId);
+   scrubbing={button,pointerId,wasMuted,interval:null,last:now,started:now};
+   root.classList.add(dir<0?'scrubbing-reverse':'scrubbing-forward');
+   jump(dir*5);
+   scrubbing.interval=setInterval(()=>{
+     if(!scrubbing)return;
+     const t=performance.now(),dt=Math.min((t-scrubbing.last)/1000,.25);
+     scrubbing.last=t;
+     if(t-scrubbing.started>180)jump(dir*20*dt);
+   },80);
+ }
+ for(const [id,dir] of [['rewind',-1],['forward',1]]){
+   const b=document.getElementById(id);
+   b.addEventListener('pointerdown',e=>startScrub(b,dir,e));
+   b.addEventListener('pointerup',e=>{if(scrubbing&&scrubbing.pointerId===e.pointerId)stopScrub()});
+   b.addEventListener('pointercancel',stopScrub);
+   b.addEventListener('lostpointercapture',stopScrub);
+   b.addEventListener('click',e=>{if(e.detail===0)jump(dir*5)});
+ }
+ document.getElementById('play').onclick=()=>{
+   if(!tracks.length){status.textContent='NO RECORDINGS — CHECK tunes/';return}
+   if(!audio.src)setTape(index,false,false);
+   if(audio.paused)audio.play().catch(()=>status.textContent='AUDIO UNAVAILABLE');else audio.pause();
+ };
+ document.getElementById('stop').onclick=()=>{
+   stopScrub();audio.pause();audio.currentTime=0;remember();updateReels();status.textContent='';
+ };
+ document.getElementById('previous').onclick=()=>switchTape(-1);
+ document.getElementById('next').onclick=()=>switchTape(1);
+ const playButton=document.getElementById('play'), playIcon=document.getElementById('play-icon');
+ function syncPlayButton(){
+   const isPlaying=!audio.paused&&!audio.ended;
+   playIcon.setAttribute('d',isPlaying?'M6 4h4v16H6zM14 4h4v16h-4z':'M7 3 21 12 7 21z');
+   playButton.setAttribute('aria-label',isPlaying?'Pause':'Play');
+   playButton.setAttribute('title',isPlaying?'Pause':'Play');
+   playButton.setAttribute('aria-pressed',String(isPlaying));
+   root.classList.toggle('playing',isPlaying);
+ }
+ // Let the device's media controls operate the same player.
+ registerMediaAction('play',()=>audio.play().catch(()=>{}));
+ registerMediaAction('pause',()=>audio.pause());
+ registerMediaAction('stop',()=>{stopScrub();audio.pause();audio.currentTime=0;remember();updateReels();updateMediaPosition()});
+ registerMediaAction('previoustrack',()=>switchTape(-1));
+ registerMediaAction('nexttrack',()=>switchTape(1));
+ registerMediaAction('seekbackward',details=>{jump(-(details.seekOffset||10));updateMediaPosition()});
+ registerMediaAction('seekforward',details=>{jump(details.seekOffset||10);updateMediaPosition()});
+ registerMediaAction('seekto',details=>{
+   if(Number.isFinite(audio.duration)&&Number.isFinite(details.seekTime)){
+     audio.currentTime=clamp(details.seekTime,0,audio.duration);updateReels();remember();updateMediaPosition();
+   }
+ });
+ audio.addEventListener('play',()=>{if(mediaSession)mediaSession.playbackState='playing'});
+ audio.addEventListener('pause',()=>{if(mediaSession)mediaSession.playbackState='paused'});
+ audio.addEventListener('loadedmetadata',updateMediaPosition);
+ audio.addEventListener('seeked',updateMediaPosition);
+ audio.addEventListener('timeupdate',updateMediaPosition);
+ audio.addEventListener('play',syncPlayButton);
+ audio.addEventListener('pause',syncPlayButton);
+ audio.addEventListener('loadedmetadata',updateReels);
+ audio.addEventListener('timeupdate',()=>{updateReels();if(Math.abs(audio.currentTime-lastSaved)>2){remember();lastSaved=audio.currentTime}});
+ audio.addEventListener('seeked',()=>{updateReels();remember()});
+ audio.addEventListener('ended',()=>{if(tracks[index]){try{localStorage.setItem(storageKey(tracks[index]),'0')}catch(e){}}switchTape(1,true)});
+ audio.addEventListener('error',()=>{status.textContent='AUDIO UNAVAILABLE — CHECK FILENAME'});
+ window.addEventListener('pagehide',remember);
+ window.addEventListener('blur',()=>{stopScrub();remember()});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){stopScrub();remember()}else fetchTracks().then(list=>{if(list.length){let name=tracks[index];tracks=list;index=Math.max(0,list.indexOf(name))}}).catch(()=>{})});
+ setReels(0);label.textContent='LOADING TAPES';status.textContent='SCANNING TUNES FOLDER';
+ fetchTracks().then(list=>{tracks=list;setTape(0,false,false)}).catch(()=>{label.textContent='NO RECORDINGS';status.textContent='CHECK tunes/scan.asp'});
+})();</script></body></html>
